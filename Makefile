@@ -1,37 +1,52 @@
-CC?=gcc
-CFLAGS=-std=c11 -O2 -Wall -Wextra -Wpedantic -Iinclude
-RM=rm -f
+# Compilação padrão
+CC      = cc
+CFLAGS  = -std=c11 -O2 -Wall -Wextra -Wpedantic -Iinclude
+LDFLAGS =
 
-# A1+A2: profiler
-RM_SRC=src/main.c src/cpu_monitor.c src/memory_monitor.c src/io_monitor.c src/net_proc.c
-RM_BIN=resource_monitor
+# Fontes do resource profiler
+SRC_MON = src/main.c src/cpu_monitor.c src/memory_monitor.c src/io_monitor.c
 
-# A3: namespaces
-NS_SRC=src/namespace_analyzer.c
-NS_BIN=ns_analyzer
+# Fontes do namespace analyzer
+SRC_NS  = src/namespace_analyzer.c
 
-# A4: cgroups
-CG_SRC=src/cgroup.c src/cgroup_cli.c
-CG_BIN=cg_manager
+# Fontes do cgroup manager
+SRC_CG  = src/cgroup.c src/cgroup_manager.c
 
-# Menu
-MENU_SRC=src/ra3_menu.c
-MENU_BIN=ra3_menu
+# Binários de teste
+TESTS = tests/test_cpu tests/test_memory tests/test_io
 
-all: $(RM_BIN) $(NS_BIN) $(CG_BIN) $(MENU_BIN)
+# Alvo padrão: tudo
+all: resource_monitor ns_analyzer cg_manager
 
-$(RM_BIN): $(RM_SRC) src/proc_extras.c
-	$(CC) $(CFLAGS) -o $@ $(RM_SRC) src/proc_extras.c
+# ------------- Binários principais -------------
 
-$(NS_BIN): $(NS_SRC)
-	$(CC) $(CFLAGS) -o $@ $(NS_SRC)
+resource_monitor: $(SRC_MON)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(CG_BIN): $(CG_SRC)
-	$(CC) $(CFLAGS) -o $@ $(CG_SRC)
+ns_analyzer: $(SRC_NS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(MENU_BIN): $(MENU_SRC)
-	$(CC) $(CFLAGS) -o $@ $(MENU_SRC)
+cg_manager: $(SRC_CG)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+# ------------- Programas de teste -------------
+
+tests/test_cpu: tests/test_cpu.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+tests/test_memory: tests/test_memory.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+tests/test_io: tests/test_io.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+tests: $(TESTS)
+
+# ------------- Limpeza -------------
 
 clean:
-	$(RM) $(RM_BIN) $(NS_BIN) $(CG_BIN) $(MENU_BIN)
+	rm -f resource_monitor ns_analyzer cg_manager
+	rm -f $(TESTS)
+
+.PHONY: all tests clean
 
