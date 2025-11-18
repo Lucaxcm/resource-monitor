@@ -10,10 +10,7 @@ Projeto desenvolvido para a RA3 de Sistemas Operacionais com foco em:
 
 Todo o projeto é acionado **via linha de comando**, sem menus gráficos.
 
----
-
 ## 1. Estrutura do Projeto
-
 ```text
 resource-monitor/
 ├── README.md
@@ -39,49 +36,48 @@ resource-monitor/
 └── scripts/
     ├── visualize.py
     └── compare_tools.sh
-    
+```
 2. Pré-requisitos
+
 Linux com acesso a:
 
 /proc (para monitoramento)
-
 /sys/fs/cgroup (para cgroups v2)
-
 Compilador C (ex.: gcc)
-
 make
-
 python3
-
 (Opcional) matplotlib para gráficos no visualize.py
-
 (Opcional) pidstat (pacote sysstat) para comparação no compare_tools.sh
 
 3. Compilação
+
 Na raiz do projeto:
 
 bash
 Copiar código
 make          # compila resource_monitor, ns_analyzer e cg_manager
 make tests    # compila os programas de teste em tests/
+
 Para limpar os binários:
 
 bash
 Copiar código
 make clean
+
 4. Resource Profiler – resource_monitor
+
 4.1. Objetivo
+
 Monitorar um processo (via PID) ao longo do tempo, coletando:
 
 Uso de CPU (%)
-
 Uso de memória (RSS e VSZ, em kB)
-
 Taxas de I/O (bytes lidos e escritos por segundo)
 
 A saída é um CSV, fácil de importar em planilhas ou scripts.
 
 4.2. Uso
+
 bash
 Copiar código
 ./resource_monitor <pid> <intervalo_ms> <samples>
