@@ -1,19 +1,33 @@
-#pragma once
+#ifndef NAMESPACE_H
+#define NAMESPACE_H
+
 #include <stdbool.h>
+#include <sys/types.h>
 
+/*
+ * Utilitários simples para trabalhar com namespaces.
+ * A estratégia é ler os links simbólicos em caminhos como:
+ *   /proc/<pid>/ns/net
+ *   /proc/<pid>/ns/pid
+ *   /proc/<pid>/ns/mnt
+ * e extrair o número dentro dos colchetes, ex.: "net:[4026531993]".
+ */
+
+/* Tipos de namespace que vamos suportar */
 typedef struct {
-  const char* name;     // "mnt","uts","ipc","pid","user","net","cgroup"
-  char link[128];       // ex.: "mnt:[4026531840]"
-} ns_entry_t;
+    unsigned long mnt;
+    unsigned long pid;
+    unsigned long uts;
+    unsigned long ipc;
+    unsigned long net;
+    unsigned long user;
+    unsigned long cgroup;
+} ns_ids_t;
 
-/* Lê os links em /proc/<pid>/ns/<tipo> e preenche 'entries' (até maxN). Retorna quantos achou. */
-int ns_list_for_pid(int pid, ns_entry_t* entries, int maxN);
+/* Lê todos os namespaces de um processo */
+bool ns_read_ids(pid_t pid, ns_ids_t *out);
 
-/* Compara inodes de namespaces entre dois PIDs. 0 = iguais; 1 = diferentes; -1 = erro. */
-int ns_compare_pids(int pidA, int pidB);
+/* Compara dois conjuntos de IDs (true se forem iguais) */
+bool ns_equal(const ns_ids_t *a, const ns_ids_t *b);
 
-/* Agrupa processos por inode de um tipo de namespace e imprime no stdout. */
-bool ns_map_processes_by_type(const char* type);
-
-/* Mede o overhead (µs) de unshare() criando os namespaces passados em CSV. */
-bool ns_measure_overhead(const char* flags_csv, int runs);
+#endif /* NAMESPACE_H */
