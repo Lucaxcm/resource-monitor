@@ -50,7 +50,7 @@ static int cmd_limit_mem(const char *name, const char *bytes) {
 }
 
 static int cmd_show(const char *name) {
-    char buf[1024];
+    char buf[2048];
 
     if (cg_read_file(name, "cpu.max", buf, sizeof(buf)))
         printf("cpu.max: %s", buf);
@@ -63,6 +63,9 @@ static int cmd_show(const char *name) {
 
     if (cg_read_file(name, "memory.current", buf, sizeof(buf)))
         printf("memory.current: %s", buf);
+
+    if (cg_read_blkio(name, buf, sizeof(buf)))
+        printf("io.stat:\n%s", buf);
 
     return 0;
 }

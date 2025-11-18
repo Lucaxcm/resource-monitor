@@ -83,3 +83,8 @@ bool cg_read_file(const char *name,
     buf[n] = '\0';
     return true;
 }
+
+bool cg_read_blkio(const char *name, char *buf, size_t buflen) {
+    return cg_read_file(name, "io.stat", buf, buflen);
+}
+

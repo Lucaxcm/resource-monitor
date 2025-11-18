@@ -20,6 +20,8 @@ bool cg_move_pid(const char *name, pid_t pid);
 /* Move o próprio processo (getpid()) */
 bool cg_move_self(const char *name);
 
+bool cg_read_blkio(const char *name, char *buf, size_t buflen);
+
 /*
  * Limites básicos:
  *  - CPU: escreve a linha em cpu.max   (ex.: "25000 100000" ou "max 100000")

@@ -152,8 +152,53 @@ static int cmd_report(void) {
     return 0;
 }
 
+/* Lista todos os processos pertencentes a um namespace específico */
+static int cmd_find(const char *ns_type, unsigned long ns_id) {
+    DIR *d = opendir("/proc");
+    if (!d) {
+        perror("opendir /proc");
+        return 1;
+    }
+
+    struct dirent *de;
+    while ((de = readdir(d))) {
+        char *end = NULL;
+        long pid = strtol(de->d_name, &end, 10);
+        if (*end != '\0') continue;
+
+        ns_ids_t ns;
+        if (!ns_read_ids((pid_t)pid, &ns)) continue;
+
+        unsigned long current = 0;
+
+        if      (strcmp(ns_type,"mnt")==0)    current = ns.mnt;
+        else if (strcmp(ns_type,"pid")==0)    current = ns.pid;
+        else if (strcmp(ns_type,"uts")==0)    current = ns.uts;
+        else if (strcmp(ns_type,"ipc")==0)    current = ns.ipc;
+        else if (strcmp(ns_type,"net")==0)    current = ns.net;
+        else if (strcmp(ns_type,"user")==0)   current = ns.user;
+        else if (strcmp(ns_type,"cgroup")==0) current = ns.cgroup;
+        else {
+            fprintf(stderr,"Namespace invalido: %s\n", ns_type);
+            closedir(d);
+            return 1;
+        }
+
+        if (current == ns_id)
+            printf("%ld\n", pid);
+    }
+
+    closedir(d);
+    return 0;
+}
+
 int main(int argc, char **argv) {
     if (argc < 2) {
+
+        if (strcmp(argv[1], "find") == 0 && argc == 4) {
+            return cmd_find(argv[2], strtoul(argv[3], NULL, 10));
+        }
+
         usage(argv[0]);
         return 1;
     }
