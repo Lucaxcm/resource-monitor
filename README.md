@@ -14,31 +14,32 @@ Todo o projeto é acionado via linha de comando, sem menus gráficos.
 
 1. Estrutura do Projeto
 
-    resource-monitor/
-    ├── README.md
-    ├── Makefile
-    ├── docs/
-    │   └── ARCHITECTURE.md
-    ├── include/
-    │   ├── monitor.h
-    │   ├── namespace.h
-    │   └── cgroup.h
-    ├── src/
-    │   ├── main.c                # resource_monitor
-    │   ├── cpu_monitor.c
-    │   ├── memory_monitor.c
-    │   ├── io_monitor.c
-    │   ├── namespace_analyzer.c  # ns_analyzer
-    │   ├── cgroup.c
-    │   └── cgroup_manager.c      # cg_manager
-    ├── tests/
-    │   ├── test_cpu.c
-    │   ├── test_memory.c
-    │   └── test_io.c
-    └── scripts/
-        ├── visualize.py
-        └── compare_tools.sh
-
+```text
+resource-monitor/
+├── README.md
+├── Makefile
+├── docs/
+│   └── ARCHITECTURE.md
+├── include/
+│   ├── monitor.h
+│   ├── namespace.h
+│   └── cgroup.h
+├── src/
+│   ├── main.c                # resource_monitor
+│   ├── cpu_monitor.c
+│   ├── memory_monitor.c
+│   ├── io_monitor.c
+│   ├── namespace_analyzer.c  # ns_analyzer
+│   ├── cgroup.c
+│   └── cgroup_manager.c      # cg_manager
+├── tests/
+│   ├── test_cpu.c
+│   ├── test_memory.c
+│   └── test_io.c
+└── scripts/
+    ├── visualize.py
+    └── compare_tools.sh
+```
 ------------------------------------------------------------------------
 
 2. Pré-requisitos
